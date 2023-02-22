@@ -61,6 +61,11 @@ class GaussianMixtureModel:
             for j in range(self.num_of_gaussians):
                 self.b[i][j] = self.a[i][j] * self.data[i]
         # updating the c values (intermediate updates for the Gaussian components' covariances)
+        for i in range(self.num_of_points):
+            for j in range(self.num_of_gaussians):
+                self.b[i][j] = self.a[i][j] * (self.data[i] - self.means[j]) * np.transpose(self.data[i] - self.means[j])
+
+        
 
 
 
