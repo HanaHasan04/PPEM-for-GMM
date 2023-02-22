@@ -68,12 +68,26 @@ class GaussianMixtureModel:
             for j in range(self.num_of_gaussians):
                 self.b[i][j] = self.a[i][j] * (self.data[i] - self.means[j]) * np.transpose(self.data[i] - self.means[j])
 
-        
+        # Setup TenSEAL context
+        context = ts.context(
+            ts.SCHEME_TYPE.CKKS,
+            poly_modulus_degree=8192,
+            coeff_mod_bit_sizes=[60, 40, 40, 60]
+        )
+        context.generate_galois_keys()
+        context.global_scale = 2 ** 40
 
+        # for each Gaussian component, each party i sends its corresponding {a_ij, b_ij, c_ij} encrypted
+        # to the untrusted third party, then the TP computes the encrypted sums a_j, b_j, c_j
+        # the results are then decrypted and the global updates are performed
+        for j in range(self.num_of_gaussians):
+            enc_aj = ts.ckks_vector(context, self.a[:, j]).sum()
+            enc_bj = ts.ckks_vector(context, self.b[:, j]).sum()
+            enc_cj = ts.ckks_vector(context, self.c[:, j]).sum()
+            a_j = enc_aj.decrypt()
+            b_j = enc_bj.decrypt()
+            c_j = enc_cj.decrypt()
 
-
-
-
-
-
-
+            self.coefficients[j] = a_j / self.num_of_points
+            self.means[j] = b_j / a_j
+            self.covariances[j] = c_j / a_j
