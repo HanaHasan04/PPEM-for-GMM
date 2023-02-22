@@ -55,12 +55,15 @@ class GaussianMixtureModel:
         '''
         Maximization Step (M-Step) of the Expectation Maximization algorithm.
         '''
-        # E-Step updates the a values (intermediate updates for the Gaussian components' weights)
-        # updating the b values (intermediate updates for the Gaussian components' means)
+
+        # E-Step updates the 'a' values (intermediate updates for the Gaussian components' weights)
+
+        # updating the 'b' values (intermediate updates for the Gaussian components' means)
         for i in range(self.num_of_points):
             for j in range(self.num_of_gaussians):
                 self.b[i][j] = self.a[i][j] * self.data[i]
-        # updating the c values (intermediate updates for the Gaussian components' covariances)
+
+        # updating the 'c' values (intermediate updates for the Gaussian components' covariances)
         for i in range(self.num_of_points):
             for j in range(self.num_of_gaussians):
                 self.b[i][j] = self.a[i][j] * (self.data[i] - self.means[j]) * np.transpose(self.data[i] - self.means[j])
