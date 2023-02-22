@@ -27,7 +27,7 @@ class GaussianMixtureModel:
     param b: intermediate updates for means
     param c: intermediate updates for covariances
     """
-    def __init__(self, data, num_of_gaussians, num_of_points, ):
+    def __init__(self, data, num_of_gaussians, num_of_points):
         self.data = data
         self.num_of_gaussians = num_of_gaussians
         self.num_of_points = num_of_points
@@ -77,17 +77,35 @@ class GaussianMixtureModel:
         context.generate_galois_keys()
         context.global_scale = 2 ** 40
 
-        # for each Gaussian component, each party i sends its corresponding {a_ij, b_ij, c_ij} encrypted
+        # for each Gaussian component, each party i sends its corresponding [a_ij, b_ij, c_ij] encrypted
         # to the untrusted third party, then the TP computes the encrypted sums a_j, b_j, c_j
-        # the results are then decrypted and the global updates are performed
-        for j in range(self.num_of_gaussians):
-            enc_aj = ts.ckks_vector(context, self.a[:, j]).sum()
-            enc_bj = ts.ckks_vector(context, self.b[:, j]).sum()
-            enc_cj = ts.ckks_vector(context, self.c[:, j]).sum()
-            a_j = enc_aj.decrypt()
-            b_j = enc_bj.decrypt()
-            c_j = enc_cj.decrypt()
+        # the results are then decrypted and the global updates are performed.
 
-            self.coefficients[j] = a_j / self.num_of_points
-            self.means[j] = b_j / a_j
-            self.covariances[j] = c_j / a_j
+        for j in range(self.num_of_gaussians):
+            enc_sum_abc = ts.ckks_vector(context, [0, 0, 0])
+            for i in range(self.num_of_points):
+                abc_ij = [self.a[i][j], self.b[i][j], self.c[i][j]]     # [a_ij, b_ij, c_ij]
+                enc_ij = ts.ckks_vector(context, abc_ij)        # [a_ij, b_ij, c_ij] encrypted
+                enc_sum_abc = enc_sum_abc + enc_ij
+            # enc_sum_abc is now [a_j, b_j, c_j] encrypted
+            sum_abc = enc_sum_abc.decrypt()         # [a_j, b_j, c_j]
+            # global updates
+            self.coefficients[j] = sum_abc[0] / self.num_of_points     # beta_j = a_j/n
+            self.means[j] = sum_abc[1] / sum_abc[0]     # mu_j = b_j/a_j
+            self.covariances[j] = sum_abc[2] / sum_abc[0]       # Sigma_j = c_j/a_j
+
+
+
+            # enc_aj = ts.ckks_vector(context, self.a[:, j]).sum()
+            # enc_bj = ts.ckks_vector(context, self.b[:, j]).sum()
+            # enc_cj = ts.ckks_vector(context, self.c[:, j]).sum()
+            # a_j = enc_aj.decrypt()
+            # b_j = enc_bj.decrypt()
+            # c_j = enc_cj.decrypt()
+            #
+            # self.coefficients[j] = a_j / self.num_of_points
+            # self.means[j] = b_j / a_j
+            # self.covariances[j] = c_j / a_j
+
+    def log_likelihood(self):
+        
