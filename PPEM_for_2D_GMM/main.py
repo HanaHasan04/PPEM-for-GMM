@@ -94,18 +94,29 @@ class GaussianMixtureModel:
             self.means[j] = sum_abc[1] / sum_abc[0]     # mu_j = b_j/a_j
             self.covariances[j] = sum_abc[2] / sum_abc[0]       # Sigma_j = c_j/a_j
 
-
-
-            # enc_aj = ts.ckks_vector(context, self.a[:, j]).sum()
-            # enc_bj = ts.ckks_vector(context, self.b[:, j]).sum()
-            # enc_cj = ts.ckks_vector(context, self.c[:, j]).sum()
-            # a_j = enc_aj.decrypt()
-            # b_j = enc_bj.decrypt()
-            # c_j = enc_cj.decrypt()
-            #
-            # self.coefficients[j] = a_j / self.num_of_points
-            # self.means[j] = b_j / a_j
-            # self.covariances[j] = c_j / a_j
+    # enc_aj = ts.ckks_vector(context, self.a[:, j]).sum()
+    # enc_bj = ts.ckks_vector(context, self.b[:, j]).sum()
+    # enc_cj = ts.ckks_vector(context, self.c[:, j]).sum()
+    # a_j = enc_aj.decrypt()
+    # b_j = enc_bj.decrypt()
+    # c_j = enc_cj.decrypt()
+    #
+    # self.coefficients[j] = a_j / self.num_of_points
+    # self.means[j] = b_j / a_j
+    # self.covariances[j] = c_j / a_j
 
     def log_likelihood(self):
-        
+        l = np.zeros(len(self.data))        # log-likelihood function
+        for j in range(self.num_of_gaussians):
+            l += self.coefficients[j] * multivariate_normal.logpdf(self.data, mean=self.means[j], cov=self.covariances[j])
+        return np.sum(l)
+
+    # def log_likelihood(self):
+    #     l = []      # log-likelihood function
+    #     for point in self.data:
+    #         sum = 0
+    #         for j in range(self.num_of_gaussians):
+    #             sum += self.coefficients[j] * multivariate_normal.pdf(point, mean=self.means[j], cov=self.covariances[j])
+    #         l.append(np.log(sum))
+    #     return np.sum(l)
+    
