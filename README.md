@@ -22,7 +22,7 @@ The expectation maximization algorithm can be applied to estimate the parameters
 In the case of a GMM, the E-step involves computing the posterior probabilities of each data point belonging to each of the Gaussian components. These probabilities are used to update the estimates of the mixture weights and the means and covariances of each Gaussian component in the M-step.  
   
 ## Distributed Expectation-Maximization for the Gaussian Mixture Model  
-We consider the scenario where $n$ parties each has its own data $x_i$ and these parties would like to collaborate to learn a GMM based on the full dataset {$\{x_1, x_2, ..., x_n\}$}. Assume there are in total $c$ Gaussian models and denote $C = \{1, ..., c\}$. Specifically, the GMM density is given by\\
+We address the scenario where $n$ parties each has its own data $x_i$ and these parties would like to collaborate to learn a GMM based on the full dataset {$\{x_1, x_2, ..., x_n\}$}. Assume there are in total $c$ Gaussian models and denote $C = \{1, ..., c\}$. Specifically, the GMM density is given by\\
 $$
 p(x)=\sum_{j \in C} \beta_j p(x| \mu_j, \Sigma_j)
 $$
@@ -35,13 +35,17 @@ $\boldsymbol{M-Step:}$
   
 \[\Sigma_j^{t+1} = \frac{\sum_{i=1}^n P(x_i|N_j^t)(x_i - \mu_j^t)(x_i - \mu_j^t)^\top}{\sum_{i=1}^n P(x_i|N_j^t)}\]  
   
-## Privacy-Preserving Expectation Maximization (PPEM)
-  
+## Privacy-Preserving Expectation Maximization (PPEM)  
+To deploy such an algorithm in cloud environments, security and privacy issues need be considered to avoid data breaches or abuses by external malicious parties or even by cloud service providers.  
+
+## Proposed Approach  
+We address the scenario where there are $n$ parties, each holding its own private data $x_i$ (a point) and we wish to fit a GMM to the full dataset {}.  
+We propose a client-server model, where the cloud service is an untrusted third party and acts as the central server, providing a service to the clients who are the owners of the private data.  
+We assume an Honest-but-Curious adversary and do not consider the Malicious case, thus we can assume that the server (the untrusted third party, the "cloud") is not mailcious.  
+We propose a privacy-preserving federated learning approach using fully homomorphic encryption as folllows:  
 
 
 
 
 
-
-
-
+ 
