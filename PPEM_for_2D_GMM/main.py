@@ -146,17 +146,6 @@ class GaussianMixtureModel:
         ax.add_artist(ellipse)
         return ellipse
 
-    def show_gaussian_components(self):
+    def show_gaussian_components(self, ax):
         for j in range(self.num_of_gaussians):
-            # Compute eigenvalues and eigenvectors of the covariance matrix
-            eigvals, eigvecs = np.linalg.eigh(cov)
-            # Compute the rotation angle of the ellipse
-            angle = np.degrees(np.arctan2(*eigvecs[::-1, 0]))
-            # Compute the semi-axes lengths of the ellipse
-            width, height = 2 * n_std * np.sqrt(eigvals)
-            # Create the ellipse object with the given parameters
-            ellipse = Ellipse(xy=mean, width=width, height=height, angle=angle, **kwargs)
-            # Add the ellipse to the plot
-            ax.add_artist(ellipse)
-            return ellipse
-
+            self.show_one_gaussian(mean=self.means[j], cov=self.covariances[j], ax=ax)
