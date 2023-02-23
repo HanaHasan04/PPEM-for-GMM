@@ -5,9 +5,9 @@
 A Gaussian mixture model is a probabilistic model that assumes all the data points are generated from a mixture of a finite number of Gaussian distributions with unknown parameters.  
 Gaussian mixture models are very useful clustering models. Note that in traditional clustering algorithms such as k-means or DBSCAN, each data point belongs to exactly one cluster (**hard clustering**). Gaussian mixture models, on the other hand, use **soft clustering** where each data point may belong to several clusters with a fractional degree of membership in each.  
 In the GMM framework, each Gaussian component is characterized by its mean $\mu$, covariance matrix $\Sigma$, and mixture coefficient (weights) $\beta$.  
-<img src="https://user-images.githubusercontent.com/100927079/220479823-2a37ddcf-bf37-40e5-af98-a3d6da368320.png" alt="Alt text" style="width:300px;height:300px;"> 
-<img src="https://user-images.githubusercontent.com/100927079/220480649-b9bf4a5e-34b3-4ef8-bcb1-8db540f01e33.png" alt="Alt text" style="width:300px;height:300px;"> 
-<img src="https://user-images.githubusercontent.com/100927079/220480758-d2949090-f2ae-42c7-8ae4-a7cace12a9ef.png" alt="Alt text" style="width:300px;height:300px;">  
+<img src="https://user-images.githubusercontent.com/100927079/220479823-2a37ddcf-bf37-40e5-af98-a3d6da368320.png" alt="Alt text" style="width:200px;height:200px;"> 
+<img src="https://user-images.githubusercontent.com/100927079/220480649-b9bf4a5e-34b3-4ef8-bcb1-8db540f01e33.png" alt="Alt text" style="width:200px;height:200px;"> 
+<img src="https://user-images.githubusercontent.com/100927079/220480758-d2949090-f2ae-42c7-8ae4-a7cace12a9ef.png" alt="Alt text" style="width:200px;height:200px;">  
   
 ## Expectation Maximization (EM)  
 Expectation maximization is a clustering-based machine learning algorithm that is widely used in many areas of science, such as bio-informatics and computer vision, to perform maximum likelihood estimation (MLE) estimation for models with latent (hidden, unobserved) variables.  
@@ -39,13 +39,25 @@ $\boldsymbol{M-Step:}$
 To deploy such an algorithm in cloud environments, security and privacy issues need be considered to avoid data breaches or abuses by external malicious parties or even by cloud service providers.  
 
 ## Proposed Approach  
-We address the scenario where there are $n$ parties, each holding its own private data $x_i$ (a point) and we wish to fit a GMM to the full dataset {}.  
-We propose a client-server model, where the cloud service is an untrusted third party and acts as the central server, providing a service to the clients who are the owners of the private data.  
-We assume an Honest-but-Curious adversary and do not consider the Malicious case, thus we can assume that the server (the untrusted third party, the "cloud") is not mailcious.  
-We propose a privacy-preserving federated learning approach using fully homomorphic encryption as folllows:  
+We address the following scenario:  
+- Data is distributed among many parties: there are $n$ parties, each holding its own private data $x_i$ (a point) and we wish to fit a GMM to the full dataset.  
+- We propose a client-server model, where the cloud service is an untrusted third party and acts as the central server, providing a service to the clients who are the owners of the private data.  
+- We assume an Honest-but-Curious adversary and do not consider the Malicious case, thus we can assume that the server (the untrusted third party, the "cloud") is not mailcious.  
+  
+It's worth noting that in the distributed version of the Expectation Maximization algorithm, the $\{E-Step}$ can be computed locally. This means that each party can perform the E-step on its own data, thus preserving data privacy. However, the $\{M-Step}$ requires data aggregation to compute global updates of the Gaussian components' parameters, which raises privacy concerns. To address this, we simplify the M-step by breaking it down into intermediate updates that are also computed locally and will periodically be communicated with the central server.  
+Each party computes the following:  
+$$a_{ij}^t = P(x_i|N_j^t)$$
+$$b_{ij}^t = P(x_i|N_j^t)x_i$$
+$$c_{ij}^t = P(x_i|N_j^t)(x_i - \mu_j^t)(x_i - \mu_j^t)^\top$$  
+  
+where $a_{ij}$ denotes the conditional probability that data $x_i$ belongs to Gaussian model $j$ (result of the E-Step).  
 
 
-
-
-
+Our method involves utilizing fully homomorphic encryption to facilitate a privacy-preserving centralized federated learning approach.  
+  
+### The Algorithm  
+  
+### The Implementation  
+We implemented our algorithm in **Python** using the **TenSEAL** library by OpenMined, which is a convenient Python wrapper around Microsoft SEAL. (https://github.com/OpenMined/TenSEAL.git)  
+Data is encrypted under the Fully Homomorphic Encryption (FHE) scheme CKKS, which is a variant of the homomorphic encryption scheme that supports computations on real numbers.  
  
