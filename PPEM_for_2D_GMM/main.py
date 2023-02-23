@@ -105,18 +105,58 @@ class GaussianMixtureModel:
     # self.means[j] = b_j / a_j
     # self.covariances[j] = c_j / a_j
 
+    # def log_likelihood(self):
+    #     l = np.zeros(len(self.data))        # log-likelihood function
+    #     for j in range(self.num_of_gaussians):
+    #         l += self.coefficients[j] * multivariate_normal.logpdf(self.data, mean=self.means[j], cov=self.covariances[j])
+    #     return np.sum(l)
+
     def log_likelihood(self):
-        l = np.zeros(len(self.data))        # log-likelihood function
-        for j in range(self.num_of_gaussians):
-            l += self.coefficients[j] * multivariate_normal.logpdf(self.data, mean=self.means[j], cov=self.covariances[j])
+        l = []      # log-likelihood function
+        for point in self.data:
+            res = 0
+            for j in range(self.num_of_gaussians):
+                res += self.coefficients[j] * multivariate_normal.pdf(point, mean=self.means[j], cov=self.covariances[j])
+            l.append(np.log(res))
         return np.sum(l)
 
-    # def log_likelihood(self):
-    #     l = []      # log-likelihood function
-    #     for point in self.data:
-    #         sum = 0
-    #         for j in range(self.num_of_gaussians):
-    #             sum += self.coefficients[j] * multivariate_normal.pdf(point, mean=self.means[j], cov=self.covariances[j])
-    #         l.append(np.log(sum))
-    #     return np.sum(l)
-    
+    def show_one_gaussian(self, mean, cov, ax, n_std=3.0, **kwargs):
+        """
+        Utility function to plot one Gaussian from mean and covariance as an ellipse on a given Matplotlib axis `ax`.
+
+        Parameters:
+            mean (ndarray): Mean vector of shape (2,) representing the center of the ellipse.
+            cov (ndarray): Covariance matrix of shape (2, 2) representing the shape of the ellipse.
+            ax (Axes): Matplotlib axis object to draw the ellipse on.
+            n_std (float): Number of standard deviations to draw the ellipse boundary at.
+            **kwargs: Additional keyword arguments to pass to the Ellipse constructor.
+
+        Returns:
+            ellipse (Ellipse): Ellipse object representing the plotted Gaussian.
+        """
+        # Compute eigenvalues and eigenvectors of the covariance matrix
+        eigvals, eigvecs = np.linalg.eigh(cov)
+        # Compute the rotation angle of the ellipse
+        angle = np.degrees(np.arctan2(*eigvecs[::-1, 0]))
+        # Compute the semi-axes lengths of the ellipse
+        width, height = 2 * n_std * np.sqrt(eigvals)
+        # Create the ellipse object with the given parameters
+        ellipse = Ellipse(xy=mean, width=width, height=height, angle=angle, **kwargs)
+        # Add the ellipse to the plot
+        ax.add_artist(ellipse)
+        return ellipse
+
+    def show_gaussian_components(self):
+        for j in range(self.num_of_gaussians):
+            # Compute eigenvalues and eigenvectors of the covariance matrix
+            eigvals, eigvecs = np.linalg.eigh(cov)
+            # Compute the rotation angle of the ellipse
+            angle = np.degrees(np.arctan2(*eigvecs[::-1, 0]))
+            # Compute the semi-axes lengths of the ellipse
+            width, height = 2 * n_std * np.sqrt(eigvals)
+            # Create the ellipse object with the given parameters
+            ellipse = Ellipse(xy=mean, width=width, height=height, angle=angle, **kwargs)
+            # Add the ellipse to the plot
+            ax.add_artist(ellipse)
+            return ellipse
+
