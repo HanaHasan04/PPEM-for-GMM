@@ -4,7 +4,7 @@
 ## Gaussian Mixture Model (GMM) 
 A Gaussian mixture model is a probabilistic model that assumes all the data points are generated from a mixture of a finite number of Gaussian distributions with unknown parameters.  
 Gaussian mixture models are very useful clustering models. Note that in traditional clustering algorithms such as k-means or DBSCAN, each data point belongs to exactly one cluster (**hard clustering**). Gaussian mixture models, on the other hand, use **soft clustering** where each data point may belong to several clusters with a fractional degree of membership in each.  
-In the GMM framework, each Gaussian component is characterized by its mean $\mu$, covariance matrix $\Sigma$, and mixture coefficient (weights) $\beta$.  
+In the GMM framework, each Gaussian component is characterized by its mean $\mu$, covariance matrix $\Sigma$, and mixture coefficient (weight) $\beta$.  
 <img src="https://user-images.githubusercontent.com/100927079/220479823-2a37ddcf-bf37-40e5-af98-a3d6da368320.png" alt="Alt text" style="width:200px;height:200px;"> 
 <img src="https://user-images.githubusercontent.com/100927079/220480649-b9bf4a5e-34b3-4ef8-bcb1-8db540f01e33.png" alt="Alt text" style="width:200px;height:200px;"> 
 <img src="https://user-images.githubusercontent.com/100927079/220480758-d2949090-f2ae-42c7-8ae4-a7cace12a9ef.png" alt="Alt text" style="width:200px;height:200px;">  
@@ -28,12 +28,13 @@ p(x)=\sum_{j \in C} \beta_j p(x| \mu_j, \Sigma_j)
 $$
 $\boldsymbol{E-Step:}$ $$P(x_i|N_j^t) = \frac{p(x_i|\mu_j, \Sigma_j) \beta_j^t}{\sum_{k=1}^{c} p(x_i|\mu_k, \Sigma_k)\beta_k^t}$$  
 where $p(x_i|\mu_j, \Sigma_j)$ is the pdf for a Gaussian distribution with mean $\mu_j$ and covariance matrix $\Sigma_j$.  
-$\boldsymbol{M-Step:}$  
-\[\beta_j ^{t+1} = \frac{\sum_{i=1}^n P(x_i|N_j^t)}{n}\]  
   
-\[\mu_j^{t+1} = \frac{\sum_{i=1}^n P(x_i|N_j^t)x_i}{\sum_{i=1}^n P(x_i|N_j^t)}\]  
+$\boldsymbol{M-Step:}$    
   
-\[\Sigma_j^{t+1} = \frac{\sum_{i=1}^n P(x_i|N_j^t)(x_i - \mu_j^t)(x_i - \mu_j^t)^\top}{\sum_{i=1}^n P(x_i|N_j^t)}\]  
+$$\beta_j^{t+1} = \frac{\Sigma_{i=1}^n P(x_i|N_j^t)}{n}$$  
+$$μ_j^{t+1} = \frac{\sum_{i=1}^n P(x_i | N_j^t) x_i}{\sum_{i=1}^n P(x_i | N_j^t)}$$  
+$$Σ_j^{t+1} = \frac{\sum_{i=1}^n P(x_i | N_j^t) (x_i - μ_j^t) (x_i - μ_j^t)^\top}{\sum_{i=1}^n P(x_i | N_j^t)}$$
+
   
 ## Privacy-Preserving Expectation Maximization (PPEM)  
 To deploy such an algorithm in cloud environments, security and privacy issues need be considered to avoid data breaches or abuses by external malicious parties or even by cloud service providers.  
@@ -57,7 +58,7 @@ Our method involves utilizing fully homomorphic encryption to facilitate a priva
   
 ### The Algorithm  
   
-### The Implementation  
+### Implementation  
 We implemented our algorithm in **Python** using the **TenSEAL** library by OpenMined, which is a convenient Python wrapper around Microsoft SEAL. (https://github.com/OpenMined/TenSEAL.git)  
 Data is encrypted under the Fully Homomorphic Encryption (FHE) scheme CKKS, which is a variant of the homomorphic encryption scheme that supports computations on real numbers.  
  
