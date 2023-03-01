@@ -1,5 +1,7 @@
 # Privacy-Preserving Distributed Expectation Maximization for Gaussian Mixture Models  
-*Prof. Adi Akavia's Secure Cloud Computing Laboratory, Fall 2022-2023*
+*Prof. Adi Akavia's Secure Cloud Computing Laboratory, Fall 2022-2023*  
+  ![GMM_3_components](https://user-images.githubusercontent.com/100927079/222201691-96dbe87f-af89-43ac-b287-c93b0ea93409.gif)  
+
 
 ## Gaussian Mixture Model (GMM) 
 A Gaussian mixture model is a probabilistic model that assumes all the data points are generated from a mixture of a finite number of Gaussian distributions with unknown parameters.  
