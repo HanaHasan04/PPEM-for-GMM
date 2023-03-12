@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/PPEM_for_2D_GMM.iml" filepath="$PROJECT_DIR$/.idea/PPEM_for_2D_GMM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PPEM4GMM.iml" filepath="$PROJECT_DIR$/.idea/PPEM4GMM.iml" />
     </modules>
   </component>
 </project>
