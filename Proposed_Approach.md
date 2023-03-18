@@ -96,17 +96,60 @@ $$I(\overline{X_i};\overline{A_{ij}^t}, \overline{B_{ij}^t}) = I(\overline{X_i};
 which is maximal. This means that every node’s private data $x_i$ is completely revealed to the server. Hence, the algorithm would not be privacy-preserving at all.  
   
   
-In pur approach, the server is unable to determine the private data $x_i$ of each node as it only receives the encrypted intermediate updates $a_{ij}^t$ and $b_{ij}^t$.  
+In our approach, the server is unable to determine the private data $x_i$ of each node as it only receives the encrypted intermediate updates $a_{ij}^t$ and $b_{ij}^t$.  
 Moreover, at the end of each iteration, each node solely acquires the global updates, which do not expose any information regarding the private data of other nodes. Specifically, from the global updates, nodes can acquire $\Sigma_{i=1}^n a_{ij}^t$, $\Sigma_{i=1}^n b_{ij}^t$, and $\Sigma_{i=1}^n c_{ij}^t$, from which they can compute the sum of the intermediate updates of other nodes. Given the large number of participants, this does not raise any privacy concerns.
 
 
 ## Correctness  
 The fitted model, i.e., the estimated parameters of GMM, should be the same as using non-privacy preserving counterparts. Namely, the performance of the
 GMM should not be compromised by considering privacy.  
-
-
+Since we're using the CKKS scheme, the results obtained through this scheme may be approximate, but this does not significantly compromise the accuracy of the model. 
+  
 
 ## Results  
+In this section, we demonstrate numerical results to validate the comparison between the non-privacy preserving algorithm and our privacy preserving approach.  
+  
+To achieve this, we utilize a data generation function that takes three input parameters: `num_of_gaussians`, which determines the number of Gaussian components to simulate, `points_per_gaussian`, which determines the number of data points in each Gaussian component, and `mean_range`, which specifies the range of mean values for the data points.   
+  
+We simulate several GMMs using the data generation function, and compare the two algorithms using the log-likelihood of the GMMs. We plot the log-likelihood as a function of the iteration number of our proposed privacy preserving approach and the existing non-privacy preserving approach.  
+  
+The log-likelihood of a GMM with $n$ data points and $c$ Gaussian components is  
+$$\sum_{i=1}^n \sum_{j=1}^c log(\beta_j * N(x_i | \mu_j, \Sigma_j))$$
+
+  
+- **Experiment 1: `num_of_gaussians=3, points_per_gaussian=1000, mean_range=[-20, 20]`**  
+![image](https://user-images.githubusercontent.com/100927079/226111471-01d37823-fc67-465b-bc24-5009ef703f76.png)  
+  
+- **Experiment 2: `num_of_gaussians=5, points_per_gaussian=900, mean_range=[-10, 10]`**  
+![image](https://user-images.githubusercontent.com/100927079/226111547-23f18ae8-5872-4831-aa43-c1c5ec8cfcf4.png)  
+  
+- **Experiment 3: `num_of_gaussians=4, points_per_gaussian=500, mean_range= [-10, 10]`**  
+![image](https://user-images.githubusercontent.com/100927079/226111572-8838927e-7eec-499b-ab91-86432dcf440b.png)  
+  
+-  **Experiment 4: `num_of_gaussians=5, points_per_gaussian=500, mean_range=[-10, 10]`**  
+![image](https://user-images.githubusercontent.com/100927079/226111605-66616593-aac1-4a7e-909e-de9684857b67.png)  
+  
+- **Experiment 5: `num_of_gaussians=2, points_per_gaussian=1000, mean_range=[-10, 10]`**  
+![image](https://user-images.githubusercontent.com/100927079/226111657-8b122437-d86a-4883-bfdd-639c8b2a70f7.png)  
+  
+- **Experiment 6: `num_of_gaussians=3, points_per_gaussian=1000, mean_range=[-10, 10]`**  
+![image](https://user-images.githubusercontent.com/100927079/226111719-04a5760d-6a4d-46be-8fe4-6f3837c6210d.png)   
+  
+  
+  
+## Conclusion and Further Questions  
+As shown in the figures in the previous seciton, we see that the proposed approach yields parameter estimations for GMMs that are indistinguishable from those of the non-privacy preserving approach. Hence, the output correctness of the proposed approach is guaranteed and not compromised by considering privacy.  
+By using fully homomorphic encryption, we were able to maintain participants' individual privacy because the private data did not need to be disclosed for computations.  
+Regarding performance, applying parallel computing could significantly enhance it. Instead of having the server wait for all participants to send intermediate updates, the process can be done simultaneously, resulting in a faster runtime.  
+
+
+
+
+
+
+
+  
+  
 
 
   
