@@ -17,7 +17,7 @@ By utilizing the strengths of FHE while streamlining the computation process,
 we are able to strike a balance between accuracy, privacy, and performance in our proposed approach.  
   
   
-## Settings  
+## Setup
 We address the following scenario:  
 - Data is distributed and private: there are $n$ parties, each holding its own private data $x_i$ (a two-dimensional point) and 
 we wish to fit a GMM to the full dataset, without revealing the private data of each party.  
@@ -55,7 +55,7 @@ However, the $\{M-Step}$ requires data aggregation to compute global updates of 
 To address this, we simplify the M-step by breaking it down into intermediate updates that are also computed locally and will periodically be communicated with the central server.  
   
 ### The Algorithm  
-For each iteration $t$, the KMS generates a pair of public and secret keys $(pk_t, sk_t)$ and distributes both keys to all parties involved in the computation. Therefore, each party will hold both the public key $pk_t$ and the corresponding secret key $sk_t$ for the current iteration. Furthermore, the server gets access only to the oublic key $pk_t$.  
+For each iteration $t$, the KMS generates a pair of public and secret keys $(pk_t, sk_t)$ and distributes both keys to all parties involved in the computation. Therefore, each party will hold both the public key $pk_t$ and the corresponding secret key $sk_t$ for the current iteration. Furthermore, the server gets access only to the public key $pk_t$.  
   
 For every Gaussian component $j$, each node $i$ computes the following intermediate updates:  
 $$a_{ij}^t = P(x_i|N_j^t)$$ 
@@ -69,8 +69,8 @@ $x_i$ is a two-dimensional point, $a_{ij}$ is a scalar, $b_{ij}$ is a two-dimens
   
 Node $i$ then encrypts this vector and sends the ciphertext $\hat{v_{ij}^t} ← Enc_{pk_t}(v_{ij}^t)$ to the server.  
 After receiving these intermediate updates from all nodes, the server computes the sum of all the vectors (for a specific Gaussian component $j$):  
-$$\hat{v_{j}^t} ← Eval_{pk_t}(C, \hat{v_{i_{1}j}^t}, ..., \hat{v_{i_{n}j}^t})$$  
-where $C$ is a full adder circuit.  
+$$\hat{v_{j}^t} ← Eval_{pk_t}(C, \hat{v_{i_{1}j}^t}, ..., \hat{v_{i_{n}j}^t})$$
+where $C$ is a homomorphic addition circuit.  
   
 The server sends back the result $\hat{s_{ij}^t}$ to all the nodes, and then every node $i$ decrypts it to obtain the sum
 ${v_{j}^t} ← Dec_{sk_t}(\hat{v_{j}^t)}$ which is $v_j^t=\Sigma_{i=1}^n v_{ij}^t$, 
@@ -83,8 +83,29 @@ $$\beta_j^{t+1} = \frac{\Sigma_{i=1}^n P(x_i|N_j^t)}{n} = \frac{\Sigma_{i=1}^n a
 $$\mu_j^{t+1} = \frac{\Sigma_{i=1}^n P(x_i|N_j^t) x_i}{\Sigma_{i=1}^n P(x_i|N_j^t)} = \frac{\Sigma_{i=1}^n b_{ij}^t}{\Sigma_{i=1}^n a_{ij}^t}$$  
   
 $$\Sigma_j^{t+1} = \frac{\Sigma_{i=1}^n P(x_i|N_j^t) (x_i-μ_j^t) (x_i-μ_j^t)^\top}{\Sigma_{i=1}^n P(x_i|N_j^t)} = \frac{\Sigma_{i=1}^n c_{ij}^t}{\Sigma_{i=1}^n a_{ij}^t}$$  
+  
+  
+  
+## Privacy  
+Let us quantify the individual privacy of each node’s private data using mutual information $I(\overline{X};\overline{Y})$ which measures the mutual dependence between two random variables $\overline{X}, \overline{Y}$. We have that $0 \leq I(\overline{X};\overline{Y})$, with equality if and only if $\overline{X}$ is independent of $\overline{Y}$ . On the other hand, if $\overline{Y}$ uniquely determines $\overline{X}$ we have $I(\overline{X};\overline{Y})=I(\overline{X};\overline{X})$ which is maximal.  
+  
+Suppose each node shared its intermediate updates vector without encrypting it first, then although the node does not share the private date directly, it is still revealed to the server. This is because with the intermediate updates $a_{ij}^t$ and $b_{ij}^t$, the server is able to determine the private data $x_i$ of each node
+$i$ since $b_{ij}^t = a_{ij}^t x_i$.  
+That is, at each iteration the server has the following mutual information
+$$I(\overline{X_i};\overline{A_{ij}^t}, \overline{B_{ij}^t}) = I(\overline{X_i};\overline{X_i})$$
+which is maximal. This means that every node’s private data $x_i$ is completely revealed to the server. Hence, the algorithm would not be privacy-preserving at all.  
+  
+  
+In pur approach, the server is unable to determine the private data $x_i$ of each node as it only receives the encrypted intermediate updates $a_{ij}^t$ and $b_{ij}^t$.  
+Moreover, at the end of each iteration, each node solely acquires the global updates, which do not expose any information regarding the private data of other nodes. Specifically, from the global updates, nodes can acquire $\Sigma_{i=1}^n a_{ij}^t$, $\Sigma_{i=1}^n b_{ij}^t$, and $\Sigma_{i=1}^n c_{ij}^t$, from which they can compute the sum of the intermediate updates of other nodes. Given the large number of participants, this does not raise any privacy concerns.
 
- 
+
+## Correctness  
+The fitted model, i.e., the estimated parameters of GMM, should be the same as using non-privacy preserving counterparts. Namely, the performance of the
+GMM should not be compromised by considering privacy.  
+
+
+
 ## Results  
 
 
