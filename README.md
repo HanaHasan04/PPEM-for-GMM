@@ -4,7 +4,14 @@
   
 
   
-## Step-by-step guide to our repo:  
+## Step-by-step guide to our repository:  
+- Firstly, read the [background](Background.md) document. This document serves as our preliminaries and problem setup, where we introduce and explain the key concepts of Gaussian mixture models, the expectation maximization algorithm, and fully homomorphic encryption.  
+- You can now check out the [colab notebooks](Notebooks) for the aweswome visuliaztion!  
+  (Also available at [2D GMM Visualiztion](2D_GMM_Visualiztion)).  
+- Secondly, read our [proposed approach](Proposed_Approach.md), where we explain our solution in detail and show the results.  
+
+
+
 
 
 ## Requirements:  
