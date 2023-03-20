@@ -114,7 +114,7 @@ To achieve this, we utilize a data generation function that takes three input pa
 We simulate several GMMs using the data generation function, and compare the two algorithms using the log-likelihood of the GMMs. We plot the log-likelihood as a function of the iteration number of our proposed privacy preserving approach and the existing non-privacy preserving approach.  
   
 The log-likelihood of a GMM with $n$ data points and $c$ Gaussian components is  
-$$\sum_{i=1}^n \sum_{j=1}^c log(\beta_j * N(x_i | \mu_j, \Sigma_j))$$
+ $$\mathcal{L}=\sum_{i=1}^{n}\log \left(\sum_{j=1}^{c}\beta_{j} \cdot \mathcal{N}\left(\mathbf{x}_{i} | \mu_{j}, \Sigma_{j}\right)\right)$$
 
   
 - **Experiment 1: `num_of_gaussians=3, points_per_gaussian=1000, mean_range=[-20, 20]`**  
