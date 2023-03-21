@@ -8,10 +8,10 @@ In our project, we present a novel approach to address these by proposing a priv
   
 ## Step-by-Step Guide:  
 - Read the [Background](Background.md) document, which provides an overview of the fundamental concepts behind Gaussian mixture models, the expectation maximization algorithm, and fully homomorphic encryption. 
-- View the visualization in the [Colab Notebooks](Notebooks).  
+- View the 2D visualization in the [Colab Notebooks](Notebooks).  
 - Read the [Proposed Approach](Proposed_Approach.md) to understand our solution in detail and view the results.  
 - View the source code of [GMM: EM vs. PPEM](GMM_EM_vs_PPEM.ipynb).  
-- Take a look at our [presentation](slides.pdf).  
+- Take a look at our final [presentation](slides.pdf).  
 
 
 
