@@ -1,5 +1,5 @@
 # Privacy-Preserving Distributed Expectation Maximization for Gaussian Mixture Models  
-*Prof. Adi Akavia's Secure Cloud Computing Laboratory, Fall 2022-2023*  
+*Supervised by prof. Adi Akavia's Secure Cloud Computing Laboratory, Fall 2022-2023*  
   
   
 > In recent years, cloud computing has emerged as a widely adopted and cost-effective solution for storing and processing large volumes of data. However, one of the major challenges in secure cloud computing is the need to preserve the privacy of sensitive data while allowing for meaningful analysis.  
