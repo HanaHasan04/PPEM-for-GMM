@@ -19,4 +19,8 @@ In our project, we present a novel approach to address these by proposing a priv
 - numpy
 - matplotlib
 - scipy
-- tenseal  
+- tenseal
+
+
+![image](https://github.com/HanaHasan04/PPEM-for-GMM/assets/100927079/7a6caa5c-eefd-458a-b58f-737e43454b50)
+
